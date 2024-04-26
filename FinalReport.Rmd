@@ -1,0 +1,305 @@
+---
+title: "Final Project"
+author:
+- Kobe and Des
+- ~
+date: "`r paste('Last Updated:', Sys.Date())`"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: true
+    toc: true
+    toc_float: true
+  pdf_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Usually, I list all the required packages here.
+
+## Reason 1: Put your package imports at the start so you won’t run into trouble with missing functions later. It’s like getting all your tools ready before you start working.
+
+## Reason 2: When you import at the beginning, every following R chunk can use these packages because RMarkdown goes through your code step by step, from top to bottom.
+
+## Reason 3: You won’t see any messages here because we’ve used "include=FALSE", which means it keeps the output clean and tidy.
+
+library(ggplot2)
+library(dplyr)
+library(janitor)
+
+library(kableExtra)
+library(ggplot2)
+
+#esquisse
+library(esquisse)
+```
+
+# Introduction and Research question
+
+E.g. authors: "Kobe and Rachel(Des)"
+
+![](images/clipboard-1426687266.png)As a group a people who plan to have a STEM related career. Sleep is important its what gives us the energy to properly do our jobs. The following data set will allow us to research what factors contribute to sleep quality and stress levels for individuals in the workforce. This data set has 375 cases and a case is an individual in the workforce.
+
+```{r}
+df <- read.csv("sleepdata.csv")
+
+
+glimpse(df)
+
+
+```
+
+# Occupation and Sleep duration
+
+With different occupations being faced with different challenges in not only life but in profession their sleep is bound to be affected. Within this graph we are able to view how the averages change based off the occupation. With the graph and the table we are able to see how the sleep duration ranges from 5.8 hours as the min and 8.5 hours as the max. Along within this visualization we're able to see how engineers have the highest average sleep while sale represenatives show the lowest average sleep.
+
+```{r}
+library(janitor)
+library(dplyr)
+library(kableExtra)
+library(ggplot2)
+
+#esquisse
+library(esquisse)
+
+
+
+
+data <- read.csv("sleepdata.csv")
+
+col_names <- colnames(data)
+kable(col_names, row.names = TRUE, col.names= 'ATTRIBUTES')%>%
+  kable_styling(full_width = F)
+
+#Average Sleep Duration per Occupation Table 
+avgSleepDuration <- data %>%
+  group_by(Occupation)%>%
+  summarize(avgSleepDuration = mean(SleepDuration))
+
+#Average Sleep Duration for Each Occupation
+ggplot(avgSleepDuration) +
+  aes(x = Occupation, y = avgSleepDuration, fill = Occupation) +
+  geom_col() +
+  scale_fill_manual(
+    values = c(Accountant = "#440154",
+               Doctor = "#CEA2FD",
+               Engineer = "#960019",
+               Lawyer = "#0075EF",
+               Manager = "#027091",
+               Nurse = "#5DCFCA",
+               `Sales Representative` = "#27A833",
+               Salesperson = "#097A30",
+               Scientist = "#FF9913",
+               `Software Engineer` = "#3F4D03",
+               Teacher = "#8A3324")
+  ) +
+  labs(x = "Occupation",
+       y = "Average Sleep Duration (hours)",
+       title = "Average Sleep Duration for Each Occupation",
+       fill = "Occupation"
+       )+
+  coord_flip() +
+  theme_classic()+
+  theme_bw(base_size = 16)
+
+
+
+
+
+
+```
+
+# Occupation and Stress
+
+The key feature that we plan to resaerch within our dataset is stress. As our hypothesis is that stress is a leading feature into what causes issues within sleep duration and quality. As you can see sale represenatives stand our with the highest amount of stress which supports our hypothesis as they also have the lowest average sleep duration. This is an idea that we plan to study and show correlation to throughout this research. 
+
+```{r}
+
+#Average Stress Levels per Occupation Table
+avgStressLevels <- data %>%
+  group_by(Occupation)%>%
+  summarize(avgStressLevels = mean(StressLevel))
+
+#Avg Stress Levels for Each Occupation
+ggplot(avgStressLevels) +
+  aes(x = Occupation, y = avgStressLevels, fill = Occupation) +
+  geom_col() +
+  scale_fill_manual(
+    values = c(Accountant = "#440154",
+               Doctor = "#CEA2FD",
+               Engineer = "#960019",
+               Lawyer = "#0075EF",
+               Manager = "#027091",
+               Nurse = "#5DCFCA",
+               `Sales Representative` = "#27A833",
+               Salesperson = "#097A30",
+               Scientist = "#FF9913",
+               `Software Engineer` = "#3F4D03",
+               Teacher = "#8A3324")
+  ) +
+  labs(x = "Occupation",
+       y = "Average Stress Levels (scale 1-10)",
+       title = "Average Stress Levels for Each Occupation",
+       fill = "Occupation",
+  )+
+  coord_flip() +
+  theme_classic()+
+  theme_bw(base_size = 16)
+
+
+
+```
+
+\newpage
+
+# Statics
+
+These metrics provide a comprehensive overview of variability, central tendency, and outliers within our study population, informing research on sleep health and potential interventions. Analyzing these statistics aids in identifying risk factors associated with inadequate or excessive sleep duration and contributes to our understanding of sleep's impact on overall well-being. Using this we're able to show that some testers arent reaching the necessary amount of sleep within Q1-Q3. Showing that testers only were able to reach the recommended amount of sleep within Q4.
+
+```{r}
+
+sleepDurStats <- data%>%
+  select(SleepDuration) %>%
+  summarize(
+    Min = min(data$SleepDuration, na.rm = TRUE),
+    Q1 = quantile(data$SleepDuration, probs = 0.25, na.rm = TRUE),
+    Median = median(data$SleepDuration, na.rm = TRUE),
+    Q3 = quantile(data$SleepDuration, probs = 0.75, na.rm = TRUE),
+    Q4 = quantile(data$SleepDuration, probs = 1, na.rm = TRUE),
+    Max = max(data$SleepDuration, na.rm = TRUE),
+    Mean = mean(data$SleepDuration, na.rm = TRUE),
+    SD = sd(data$SleepDuration, na.rm = TRUE)
+  )%>%
+  round(., 2)
+
+#Polished Sleep Duration Descr. Stats Table
+# sleepDurKable <- sleepDurStats %>%
+sleepDurStats %>%
+  kable(
+    caption = "Sleep Duration Descriptive Statistics",
+    booktabs = TRUE,
+    align = c("c",rep("c",6))
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped"),
+    font_size = 16
+  )
+
+# print(sleepDurKable)
+
+
+
+```   
+
+
+
+Within this data set many user present stress. It ranges from 3 as the minimum and 8 has the maximum. The metric is used to quanitfy stress in terms of no stress to extremely stresssed. This allows us to assign a correlation to stress and things like occupation and sleep duration. 
+
+```{r}
+stressStats <- data%>%
+  select(StressLevel) %>%
+  summarize(
+    Min = min(data$StressLevel, na.rm = TRUE),
+    Q1 = quantile(data$StressLevel, probs = 0.25, na.rm = TRUE),
+    Median = median(data$StressLevel, na.rm = TRUE),
+    Q3 = quantile(data$StressLevel, probs = 0.75, na.rm = TRUE),
+    Q4 = quantile(data$StressLevel, probs = 1, na.rm = TRUE),
+    Max = max(data$StressLevel, na.rm = TRUE),
+    Mean = mean(data$StressLevel, na.rm = TRUE),
+    SD = sd(data$StressLevel, na.rm = TRUE)
+    )%>%
+  round(., 2)
+
+#Polished Stress Level Descr. Stats Table
+stressStats %>%
+  kable(
+    caption = "Stress Level Descriptive Statistics",
+    booktabs = TRUE,
+    align = c("c",rep("c",6))
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped"),
+    font_size = 16
+  )
+
+
+
+
+```
+\newpage
+
+# SQL Statics
+
+Using different packages like SQL we're able to show both the frequency and the probability. The frequency shows us that most cases show have a sleep duration of 6 hours and also is proven in the probability as we calculated that is the most likely sleep duration. Along with 6.1 being the second most likely sleep duration. Which both are below the recommended amount from the CDC .
+
+```{r}
+
+library(DBI)
+library(RSQLite)
+
+# Connect to an SQLite database
+con <- dbConnect(RSQLite::SQLite(), "SleepHealth.db")
+
+# Step 1: Read the CSV file
+rawsleepdata <- read.csv("sleepdata.csv")
+
+# Drop the existing "sleepdata" table if it exists
+dbExecute(con, "DROP TABLE IF EXISTS sleepdata")
+
+# Write the data frame to the SQLite database
+dbWriteTable(con, "sleepdata", rawsleepdata)
+
+# Check if the table has been created in the database
+dbListTables(con)
+
+# Query to get frequency table
+query <- "
+  
+
+SELECT 
+    SleepDuration,
+    COUNT(SleepDuration) AS frequency,
+    COUNT(SleepDuration) * 1.0 / (SELECT COUNT(SleepDuration) FROM sleepdata) AS probability
+  
+    
+FROM 
+    sleepdata
+GROUP BY 
+    SleepDuration
+ORDER BY 
+    SleepDuration;
+
+
+  
+
+"
+#Find the probabilty of someone having a sleep duration under 7 and then find the vice versa.
+
+#Find the probability of someone with a good sleep quality having a high stress levels.
+
+#Find the correlation percentage between stress and sleep duration vs sleep duration and sleep disorders 
+
+# Execute the query
+tryCatch({
+  result <- dbGetQuery(con, query)
+  head(result)
+}, error = function(e) {
+  print(paste("Error:", e$message))
+})
+
+
+
+```
+
+# Conclusions
+
+In conclusion with our research into sleep heatlh we've determined that stress is the leading cause of lower sleep duration. This visualization below also confirms that with line graph showing how those with high stress have a decreased sleep duration compared to others.
+```{r}
+ggplot(df) +
+  aes(x = StressLevel, y = SleepDuration) +
+  geom_line(colour = "#112446") +
+  labs(title = "Correlation between stress and sleep") +
+  theme_minimal()
+```
