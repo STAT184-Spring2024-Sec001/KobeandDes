@@ -76,7 +76,7 @@ kable(col_names, row.names = TRUE, col.names= 'ATTRIBUTES')%>%
 #Average Sleep Duration per Occupation Table 
 avgSleepDuration <- data %>%
   group_by(Occupation)%>%
-  summarize(avgSleepDuration = mean(SleepDuration))
+  summarize(avgSleepDuration = mean(Sleep.Duration))
 
 #Average Sleep Duration for Each Occupation
 ggplot(avgSleepDuration) +
@@ -120,7 +120,7 @@ The key feature that we plan to resaerch within our dataset is stress. As our hy
 #Average Stress Levels per Occupation Table
 avgStressLevels <- data %>%
   group_by(Occupation)%>%
-  summarize(avgStressLevels = mean(StressLevel))
+  summarize(avgStressLevels = mean(Stress.Level))
 
 #Avg Stress Levels for Each Occupation
 ggplot(avgStressLevels) +
@@ -163,14 +163,14 @@ These metrics provide a comprehensive overview of variability, central tendency,
 sleepDurStats <- data%>%
   select(SleepDuration) %>%
   summarize(
-    Min = min(data$SleepDuration, na.rm = TRUE),
-    Q1 = quantile(data$SleepDuration, probs = 0.25, na.rm = TRUE),
-    Median = median(data$SleepDuration, na.rm = TRUE),
-    Q3 = quantile(data$SleepDuration, probs = 0.75, na.rm = TRUE),
-    Q4 = quantile(data$SleepDuration, probs = 1, na.rm = TRUE),
-    Max = max(data$SleepDuration, na.rm = TRUE),
-    Mean = mean(data$SleepDuration, na.rm = TRUE),
-    SD = sd(data$SleepDuration, na.rm = TRUE)
+    Min = min(data$Sleep.Duration, na.rm = TRUE),
+    Q1 = quantile(data$Sleep.Duration, probs = 0.25, na.rm = TRUE),
+    Median = median(data$Sleep.Duration, na.rm = TRUE),
+    Q3 = quantile(data$Sleep.Duration, probs = 0.75, na.rm = TRUE),
+    Q4 = quantile(data$Sleep.Duration, probs = 1, na.rm = TRUE),
+    Max = max(data$Sleep.Duration, na.rm = TRUE),
+    Mean = mean(data$Sleep.Duration, na.rm = TRUE),
+    SD = sd(data$Sleep.Duration, na.rm = TRUE)
   )%>%
   round(., 2)
 
@@ -199,16 +199,16 @@ Within this data set many user present stress. It ranges from 3 as the minimum a
 
 ```{r}
 stressStats <- data%>%
-  select(StressLevel) %>%
+  select(Stress.Level) %>%
   summarize(
-    Min = min(data$StressLevel, na.rm = TRUE),
-    Q1 = quantile(data$StressLevel, probs = 0.25, na.rm = TRUE),
-    Median = median(data$StressLevel, na.rm = TRUE),
-    Q3 = quantile(data$StressLevel, probs = 0.75, na.rm = TRUE),
-    Q4 = quantile(data$StressLevel, probs = 1, na.rm = TRUE),
-    Max = max(data$StressLevel, na.rm = TRUE),
-    Mean = mean(data$StressLevel, na.rm = TRUE),
-    SD = sd(data$StressLevel, na.rm = TRUE)
+    Min = min(data$Stress.Level, na.rm = TRUE),
+    Q1 = quantile(data$Stress.Level, probs = 0.25, na.rm = TRUE),
+    Median = median(data$Stress.Level, na.rm = TRUE),
+    Q3 = quantile(data$Stress.Level, probs = 0.75, na.rm = TRUE),
+    Q4 = quantile(data$Stress.Level, probs = 1, na.rm = TRUE),
+    Max = max(data$Stress.Level, na.rm = TRUE),
+    Mean = mean(data$Stress.Level, na.rm = TRUE),
+    SD = sd(data$Stress.Level, na.rm = TRUE)
     )%>%
   round(., 2)
 
@@ -298,7 +298,7 @@ tryCatch({
 In conclusion with our research into sleep heatlh we've determined that stress is the leading cause of lower sleep duration. This visualization below also confirms that with line graph showing how those with high stress have a decreased sleep duration compared to others.
 ```{r}
 ggplot(df) +
-  aes(x = StressLevel, y = SleepDuration) +
+  aes(x = Stress.Level, y = Sleep.Duration) +
   geom_line(colour = "#112446") +
   labs(title = "Correlation between stress and sleep") +
   theme_minimal()
