@@ -1,7 +1,7 @@
 ---
 title: "Final Project"
 author:
-- Kobe and Des
+- Kobe George and Rachel Desulme
 - ~
 date: "`r paste('Last Updated:', Sys.Date())`"
 output:
